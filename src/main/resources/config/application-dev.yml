@@ -33,8 +33,8 @@ spring:
   datasource:
     type: com.zaxxer.hikari.HikariDataSource
     url: jdbc:postgresql://localhost:5432/bppondc
-    username: bppondc
-    password:
+    username: postgres
+    password: 1234567890
     hikari:
       poolName: Hikari
       auto-commit: false
@@ -68,7 +68,7 @@ spring:
         enabled: true
 
 server:
-  port: 8080
+  port: 8081
 
 # ===================================================================
 # JHipster specific properties
