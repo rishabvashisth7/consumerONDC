@@ -1,0 +1,39 @@
+enum CategoryStatus {
+    AVAILABLE, NOTAVAILABLE
+}
+
+entity Store{
+	storeName String,
+    storeAddress String,
+    storeRating Double
+}
+
+entity Cart{
+    referenceId String,
+    productName String,
+    price String,
+    quantity Integer
+}
+
+entity Product {
+    title String required,
+    description String,
+    price Double,
+    tag String,
+    expire LocalDate
+}
+
+
+relationship ManyToOne {
+    Cart to Product
+}
+
+relationship OneToMany {
+	Store to Product
+    Store to Cart
+}
+
+
+
+dto * with mapstruct
+service * with serviceImpl

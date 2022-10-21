@@ -1,0 +1,41 @@
+{
+  "applications": "*",
+  "changelogDate": "20221021053229",
+  "dto": "mapstruct",
+  "embedded": false,
+  "entityTableName": "store",
+  "fields": [
+    {
+      "fieldName": "storeName",
+      "fieldType": "String"
+    },
+    {
+      "fieldName": "storeAddress",
+      "fieldType": "String"
+    },
+    {
+      "fieldName": "storeRating",
+      "fieldType": "Double"
+    }
+  ],
+  "fluentMethods": true,
+  "jpaMetamodelFiltering": false,
+  "name": "Store",
+  "pagination": "no",
+  "readOnly": false,
+  "relationships": [
+    {
+      "otherEntityName": "product",
+      "otherEntityRelationshipName": "store",
+      "relationshipName": "product",
+      "relationshipType": "one-to-many"
+    },
+    {
+      "otherEntityName": "cart",
+      "otherEntityRelationshipName": "store",
+      "relationshipName": "cart",
+      "relationshipType": "one-to-many"
+    }
+  ],
+  "service": "serviceImpl"
+}

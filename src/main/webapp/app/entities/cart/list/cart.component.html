@@ -1,0 +1,86 @@
+<div>
+  <h2 id="page-heading" data-cy="CartHeading">
+    <span jhiTranslate="bppondcApp.cart.home.title">Carts</span>
+
+    <div class="d-flex justify-content-end">
+      <button class="btn btn-info me-2" (click)="loadAll()" [disabled]="isLoading">
+        <fa-icon icon="sync" [spin]="isLoading"></fa-icon>
+        <span jhiTranslate="bppondcApp.cart.home.refreshListLabel">Refresh List</span>
+      </button>
+
+      <button
+        id="jh-create-entity"
+        data-cy="entityCreateButton"
+        class="btn btn-primary jh-create-entity create-cart"
+        [routerLink]="['/cart/new']"
+      >
+        <fa-icon icon="plus"></fa-icon>
+        <span jhiTranslate="bppondcApp.cart.home.createLabel"> Create a new Cart </span>
+      </button>
+    </div>
+  </h2>
+
+  <jhi-alert-error></jhi-alert-error>
+
+  <jhi-alert></jhi-alert>
+
+  <div class="alert alert-warning" id="no-result" *ngIf="carts?.length === 0">
+    <span jhiTranslate="bppondcApp.cart.home.notFound">No carts found</span>
+  </div>
+
+  <div class="table-responsive" id="entities" *ngIf="carts && carts.length > 0">
+    <table class="table table-striped" aria-describedby="page-heading">
+      <thead>
+        <tr>
+          <th scope="col"><span jhiTranslate="global.field.id">ID</span></th>
+          <th scope="col"><span jhiTranslate="bppondcApp.cart.referenceId">Reference Id</span></th>
+          <th scope="col"><span jhiTranslate="bppondcApp.cart.productName">Product Name</span></th>
+          <th scope="col"><span jhiTranslate="bppondcApp.cart.price">Price</span></th>
+          <th scope="col"><span jhiTranslate="bppondcApp.cart.quantity">Quantity</span></th>
+          <th scope="col"><span jhiTranslate="bppondcApp.cart.product">Product</span></th>
+          <th scope="col"><span jhiTranslate="bppondcApp.cart.store">Store</span></th>
+          <th scope="col"></th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let cart of carts; trackBy: trackId" data-cy="entityTable">
+          <td>
+            <a [routerLink]="['/cart', cart.id, 'view']">{{ cart.id }}</a>
+          </td>
+          <td>{{ cart.referenceId }}</td>
+          <td>{{ cart.productName }}</td>
+          <td>{{ cart.price }}</td>
+          <td>{{ cart.quantity }}</td>
+          <td>
+            <div *ngIf="cart.product">
+              <a [routerLink]="['/product', cart.product?.id, 'view']">{{ cart.product?.id }}</a>
+            </div>
+          </td>
+          <td>
+            <div *ngIf="cart.store">
+              <a [routerLink]="['/store', cart.store?.id, 'view']">{{ cart.store?.id }}</a>
+            </div>
+          </td>
+          <td class="text-end">
+            <div class="btn-group">
+              <button type="submit" [routerLink]="['/cart', cart.id, 'view']" class="btn btn-info btn-sm" data-cy="entityDetailsButton">
+                <fa-icon icon="eye"></fa-icon>
+                <span class="d-none d-md-inline" jhiTranslate="entity.action.view">View</span>
+              </button>
+
+              <button type="submit" [routerLink]="['/cart', cart.id, 'edit']" class="btn btn-primary btn-sm" data-cy="entityEditButton">
+                <fa-icon icon="pencil-alt"></fa-icon>
+                <span class="d-none d-md-inline" jhiTranslate="entity.action.edit">Edit</span>
+              </button>
+
+              <button type="submit" (click)="delete(cart)" class="btn btn-danger btn-sm" data-cy="entityDeleteButton">
+                <fa-icon icon="times"></fa-icon>
+                <span class="d-none d-md-inline" jhiTranslate="entity.action.delete">Delete</span>
+              </button>
+            </div>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>
