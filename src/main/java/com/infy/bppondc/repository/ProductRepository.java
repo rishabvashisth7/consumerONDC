@@ -18,4 +18,5 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
     //    @Query("SELECT * FROM public.product WHERE title LIKE '%Milk%' AND store_id = 1001")
     //    Optional<ProductDTO> searchByTitleStoreId(String query)
     //
+
 }
