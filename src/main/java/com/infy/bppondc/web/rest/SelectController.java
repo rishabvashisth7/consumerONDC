@@ -13,10 +13,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 public class SelectController {
@@ -139,13 +136,14 @@ public class SelectController {
         System.out.println("CART BPP1 Details :" + cartBPP2);
     }
 
-    @RequestMapping("/total")
-    public Double totalPrice(@RequestBody String refrenceid) {
+    @RequestMapping("/total/{referenceid}")
+    public Double totalPrice(@PathVariable String referenceid) {
         List<CartDTO> cartDTO = cartService.findAll();
         System.out.println(" CartDTO :" + cartDTO);
+        System.out.println("reference" + referenceid);
         double sum = 0;
         for (int i = 0; i < cartDTO.size(); i++) {
-            if (cartDTO.get(i).getReferenceId().equals(refrenceid)) {
+            if (cartDTO.get(i).getReferenceId().equals(referenceid)) {
                 int quan = cartDTO.get(i).getQuantity();
                 double price = Double.parseDouble(cartDTO.get(i).getPrice());
                 sum += quan * price;
