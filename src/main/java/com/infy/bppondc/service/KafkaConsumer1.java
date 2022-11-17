@@ -27,11 +27,6 @@ public class KafkaConsumer1 {
         String id = jsonObject.get("productId").toString();
 
         System.out.println("Message from Producer to consumer1 !!!!!= " + message);
-        //        Item itm=new Item("1001","Consumer 1 Replied");
-        //        List lst=new ArrayList<>();
-        //        lst.add(itm);
-        //        Catalog obj=new Catalog(id,lst);
-        //        kafkaTemplate.send(TOPIC, obj);
 
         Map<String, String> map = Map.of("100", "Milk", "102", "Eggs", "101", "Bread");
 

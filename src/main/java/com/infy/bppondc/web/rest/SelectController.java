@@ -8,10 +8,8 @@ import com.infy.bppondc.service.StoreService;
 import com.infy.bppondc.service.dto.CartDTO;
 import com.infy.bppondc.service.dto.ProductDTO;
 import com.infy.bppondc.service.dto.StoreDTO;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import io.swagger.v3.core.util.Json;
+import java.util.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -59,11 +57,6 @@ public class SelectController {
 
         cartDTO.setReferenceId(l.get(0).toString().substring(1, l.get(0).toString().length() - 1));
 
-        //cartDTO.setQuantity(Integer.parseInt(l.get(1).toString()));
-        //        System.out.println(" l____________________________ : " + l);
-        //        System.out.println(" productName :" + l.get(2).toString().substring(1, l.get(2).toString().length() - 1));
-        //        System.out.println("l.get(1).toString()  --------------->>" + l.get(1).toString().substring(1, l.get(1).toString().length() - 1));
-
         cartDTO.setQuantity(Integer.parseInt(l.get(1).toString().substring(1, l.get(1).toString().length() - 1)));
         cartDTO.setProductName(l.get(2).toString().substring(1, l.get(2).toString().length() - 1));
         cartDTO.setStore(storeDTO.get());
@@ -81,10 +74,6 @@ public class SelectController {
 
         String productName = l.get(2).toString().substring(1, l.get(2).toString().length() - 1);
         Long StoreID = storeDTO.get().getId();
-
-        //  productService.findByTitle(productName);
-
-        //System.out.println("   productService.findByTitle(productName)    ::: " + productService.findByTitle(productName));
 
         cartService.save(cartDTO);
         System.out.println("CARTDTO :----------->>" + cartDTO);
@@ -149,7 +138,26 @@ public class SelectController {
                 sum += quan * price;
             }
         }
-
         return sum;
+    }
+
+    @RequestMapping("/showCart/{referenceid}")
+    public List<Map<String, String>> showCart(@PathVariable String referenceid) {
+        List<CartDTO> cartDTO = cartService.findAll();
+        List<Map<String, String>> cartRef = new ArrayList<>();
+        System.out.println(" CartDTO :" + cartDTO);
+        System.out.println("reference" + referenceid);
+
+        for (int i = 0; i < cartDTO.size(); i++) {
+            Map<String, String> map = new HashMap<>();
+            if (cartDTO.get(i).getReferenceId().equals(referenceid)) {
+                map.put("ProductName", cartDTO.get(i).getProductName());
+                map.put("Price", cartDTO.get(i).getPrice());
+                map.put("Quant", cartDTO.get(i).getQuantity().toString());
+                cartRef.add(map);
+            }
+        }
+        System.out.println(cartRef);
+        return cartRef;
     }
 }
