@@ -8,9 +8,9 @@ import com.infy.bppondc.service.StoreService;
 import com.infy.bppondc.service.dto.CartDTO;
 import com.infy.bppondc.service.dto.ProductDTO;
 import com.infy.bppondc.service.dto.StoreDTO;
-import io.swagger.v3.core.util.Json;
 import java.util.*;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -41,15 +41,11 @@ public class SelectController {
     public String bpp1(@RequestBody String product) {
         CartDTO cartDTO = new CartDTO();
 
-        // storeRepository.findById(1001L);
         System.out.println("FINDALLL  ::" + storeRepository.findAll());
-        // storeDTO.setId(Long.parseLong("1001"));
 
         Optional<StoreDTO> storeDTO = storeService.findOne(Long.parseLong("1001"));
-        //  storeDTO.get();
 
         System.out.println("STOREDTO ))))))--------" + storeDTO);
-        //  System.out.println("StoreDTO (((((())))))))))))))" + storeRepository.findById(Long.parseLong("1001")));
 
         System.out.println("******BPP id 1 is selected for product " + product);
 
@@ -94,10 +90,9 @@ public class SelectController {
         Optional<StoreDTO> storeDTO = storeService.findOne(Long.parseLong("1002"));
         //  storeDTO.get();
 
-        System.out.println("STOREDTO ))))))--------" + storeDTO);
-        //  System.out.println("StoreDTO (((((())))))))))))))" + storeRepository.findById(Long.parseLong("1002")));
+        System.out.println("STOREDTO --------" + storeDTO);
 
-        System.out.println("******BPP id 1 is selected for product " + product);
+        System.out.println("****** BPP id 1 is selected for product " + product);
 
         List l = List.of(product.substring(1, product.length() - 1).split(","));
 
@@ -166,5 +161,59 @@ public class SelectController {
         }
         System.out.println(cartRef);
         return cartRef;
+    }
+
+    //  @DeleteMapping("/delete/{referenceid")
+    @RequestMapping(value = "/delbyref/{referenceid}", method = RequestMethod.DELETE)
+    public ResponseEntity<String> deleteByReferenceId(@PathVariable String referenceid) {
+        List<CartDTO> cartDTO = cartService.findAll();
+        List<Map<String, String>> cartRef = new ArrayList<>();
+        System.out.println(" CartDTO :" + cartDTO);
+        System.out.println("reference" + referenceid);
+
+        for (int i = 0; i < cartDTO.size(); i++) {
+            if (cartDTO.get(i).getReferenceId().equals(referenceid)) {
+                cartService.deleteByReferenceId(referenceid);
+            }
+        }
+        System.out.println("deleted");
+        return ResponseEntity.ok("Items with given reference id is successfully deleted from the cart!!!");
+    }
+
+    @RequestMapping(value = "/delproductName/{productName}", method = RequestMethod.DELETE)
+    public ResponseEntity<String> deleteByProductName(@PathVariable String productName) {
+        List<CartDTO> cartDTO = cartService.findAll();
+        List<Map<String, String>> cartRef = new ArrayList<>();
+        System.out.println("CartDTO :" + cartDTO);
+        System.out.println("productName" + productName);
+
+        for (int i = 0; i < cartDTO.size(); i++) {
+            if (cartDTO.get(i).getProductName().equals(productName)) {
+                cartService.deleteByProductName(productName);
+            }
+        }
+        //   System.out.println("deleted using reference id and product name in the cart,");
+        return ResponseEntity.ok("Items with given productName is successfully deleted from the cart!!!");
+    }
+
+    @RequestMapping(value = "/delRefProd/{referenceid}", method = RequestMethod.DELETE)
+    public ResponseEntity<String> deleteByReferenceIdAndProductName(@PathVariable String referenceid, @RequestBody String productName) {
+        List<CartDTO> cartDTO = cartService.findAll();
+        //List<Map<String, String>> cartRef = new ArrayList<>();
+        System.out.println("CartDTO :" + cartDTO);
+        System.out.println("productName" + productName);
+        int flag = 0;
+        for (int i = 0; i < cartDTO.size(); i++) {
+            if ((cartDTO.get(i).getProductName().equals(productName)) && (cartDTO.get(i).getReferenceId().equals(referenceid))) {
+                cartService.deleteByReferenceIdAndProductName(referenceid, productName);
+                flag = 1;
+            }
+        }
+
+        if (flag == 1) {
+            return ResponseEntity.ok("Items with given reference id & productName is present and successfully deleted from the cart!!!");
+        } else {
+            return ResponseEntity.ok("Items with given reference id & productName is not present in cart!!");
+        }
     }
 }

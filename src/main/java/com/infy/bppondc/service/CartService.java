@@ -53,4 +53,10 @@ public interface CartService {
      * @param id the id of the entity.
      */
     void delete(Long id);
+
+    void deleteByReferenceId(String referenceId);
+
+    void deleteByReferenceIdAndProductName(String referenceId, String productName);
+
+    void deleteByProductName(String productName);
 }

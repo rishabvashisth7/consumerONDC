@@ -82,4 +82,24 @@ public class CartServiceImpl implements CartService {
         log.debug("Request to delete Cart : {}", id);
         cartRepository.deleteById(id);
     }
+
+    @Transactional
+    public void deleteByReferenceId(String referenceId) {
+        log.debug("Request to delete Cart : {}", referenceId);
+        cartRepository.deleteByReferenceId(referenceId);
+    }
+
+    @Override
+    @Transactional
+    public void deleteByReferenceIdAndProductName(String referenceId, String productName) {
+        log.debug("Request to delete Cart : {},{}", referenceId, productName);
+        cartRepository.deleteByReferenceIdAndProductName(referenceId, productName);
+    }
+
+    @Override
+    @Transactional
+    public void deleteByProductName(String productName) {
+        log.debug("Request to delete Cart : {}", productName);
+        cartRepository.deleteByProductName(productName);
+    }
 }

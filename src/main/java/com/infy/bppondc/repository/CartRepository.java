@@ -9,4 +9,10 @@ import org.springframework.stereotype.Repository;
  */
 @SuppressWarnings("unused")
 @Repository
-public interface CartRepository extends JpaRepository<Cart, Long> {}
+public interface CartRepository extends JpaRepository<Cart, Long> {
+    void deleteByReferenceId(String referenceId);
+
+    void deleteByReferenceIdAndProductName(String referenceId, String productName);
+
+    void deleteByProductName(String productName);
+}
