@@ -38,7 +38,7 @@ public class SelectController {
     }
 
     @PostMapping("/1001")
-    public void bpp1(@RequestBody String product) {
+    public String bpp1(@RequestBody String product) {
         CartDTO cartDTO = new CartDTO();
 
         // storeRepository.findById(1001L);
@@ -55,34 +55,36 @@ public class SelectController {
 
         List l = List.of(product.substring(1, product.length() - 1).split(","));
 
-        cartDTO.setReferenceId(l.get(0).toString().substring(1, l.get(0).toString().length() - 1));
-
-        cartDTO.setQuantity(Integer.parseInt(l.get(1).toString().substring(1, l.get(1).toString().length() - 1)));
-        cartDTO.setProductName(l.get(2).toString().substring(1, l.get(2).toString().length() - 1));
-        cartDTO.setStore(storeDTO.get());
-        //cartDTO.setPrice("50");
-
         List<ProductDTO> productDTOS = productService.findAll();
+
+        int flag = 0;
+
         for (int i = 0; i < productDTOS.size(); ++i) {
             ProductDTO prod = productDTOS.get(i);
             String name = l.get(2).toString().substring(1, l.get(2).toString().length() - 1);
             if (prod.getTitle().equals(name) && prod.getStore().getId() == 1001) {
+                cartDTO.setReferenceId(l.get(0).toString().substring(1, l.get(0).toString().length() - 1));
+                cartDTO.setQuantity(Integer.parseInt(l.get(1).toString().substring(1, l.get(1).toString().length() - 1)));
+                cartDTO.setProductName(l.get(2).toString().substring(1, l.get(2).toString().length() - 1));
+                cartDTO.setStore(storeDTO.get());
                 cartDTO.setPrice(prod.getPrice().toString());
+                cartService.save(cartDTO);
+                flag = 1;
                 break;
             }
         }
 
-        String productName = l.get(2).toString().substring(1, l.get(2).toString().length() - 1);
-        Long StoreID = storeDTO.get().getId();
-
-        cartService.save(cartDTO);
-        System.out.println("CARTDTO :----------->>" + cartDTO);
-
         System.out.println("CART BPP1 Details :" + cartBPP1);
+
+        if (flag == 1) {
+            return "Items are selected in Store 1";
+        } else {
+            return "Item is not present in Store 1";
+        }
     }
 
     @PostMapping("/1002")
-    public void bpp2(@RequestBody String product) {
+    public String bpp2(@RequestBody String product) {
         CartDTO cartDTO = new CartDTO();
 
         // storeRepository.findById(1002L);
@@ -99,30 +101,35 @@ public class SelectController {
 
         List l = List.of(product.substring(1, product.length() - 1).split(","));
 
-        cartDTO.setReferenceId(l.get(0).toString().substring(1, l.get(0).toString().length() - 1));
-
-        cartDTO.setQuantity(Integer.parseInt(l.get(1).toString().substring(1, l.get(1).toString().length() - 1)));
-        cartDTO.setProductName(l.get(2).toString().substring(1, l.get(2).toString().length() - 1));
-        cartDTO.setStore(storeDTO.get());
         //cartDTO.setPrice("50");
 
         List<ProductDTO> productDTOS = productService.findAll();
+
+        int flag = 0;
+
         for (int i = 0; i < productDTOS.size(); ++i) {
             ProductDTO prod = productDTOS.get(i);
             String name = l.get(2).toString().substring(1, l.get(2).toString().length() - 1);
             if (prod.getTitle().equals(name) && prod.getStore().getId() == 1002) {
+                cartDTO.setReferenceId(l.get(0).toString().substring(1, l.get(0).toString().length() - 1));
+
+                cartDTO.setQuantity(Integer.parseInt(l.get(1).toString().substring(1, l.get(1).toString().length() - 1)));
+                cartDTO.setProductName(l.get(2).toString().substring(1, l.get(2).toString().length() - 1));
+                cartDTO.setStore(storeDTO.get());
                 cartDTO.setPrice(prod.getPrice().toString());
+                cartService.save(cartDTO);
+                flag = 1;
                 break;
             }
         }
 
-        String productName = l.get(2).toString().substring(1, l.get(2).toString().length() - 1);
-        Long StoreID = storeDTO.get().getId();
-
-        cartService.save(cartDTO);
-        System.out.println("CARTDTO :----------->>" + cartDTO);
-
         System.out.println("CART BPP1 Details :" + cartBPP2);
+
+        if (flag == 1) {
+            return "Items are selected in Store 2";
+        } else {
+            return "Item is not present in Store 2";
+        }
     }
 
     @RequestMapping("/total/{referenceid}")
