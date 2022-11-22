@@ -102,4 +102,10 @@ public class CartServiceImpl implements CartService {
         log.debug("Request to delete Cart : {}", productName);
         cartRepository.deleteByProductName(productName);
     }
+
+    @Transactional(readOnly = true)
+    public List<Cart> findByReferenceIdAndProductName(String referenceId, String productName) {
+        log.debug("Request to get Cart by reference id and product name: {} {}", referenceId, productName);
+        return cartRepository.findByReferenceIdAndProductName(referenceId, productName);
+    }
 }

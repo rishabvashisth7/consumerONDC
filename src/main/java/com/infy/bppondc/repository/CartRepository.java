@@ -1,6 +1,7 @@
 package com.infy.bppondc.repository;
 
 import com.infy.bppondc.domain.Cart;
+import java.util.List;
 import org.springframework.data.jpa.repository.*;
 import org.springframework.stereotype.Repository;
 
@@ -15,4 +16,6 @@ public interface CartRepository extends JpaRepository<Cart, Long> {
     void deleteByReferenceIdAndProductName(String referenceId, String productName);
 
     void deleteByProductName(String productName);
+
+    List<Cart> findByReferenceIdAndProductName(String referenceId, String productName);
 }

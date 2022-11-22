@@ -1,5 +1,6 @@
 package com.infy.bppondc.service;
 
+import com.infy.bppondc.domain.Cart;
 import com.infy.bppondc.service.dto.CartDTO;
 import java.util.List;
 import java.util.Optional;
@@ -59,4 +60,6 @@ public interface CartService {
     void deleteByReferenceIdAndProductName(String referenceId, String productName);
 
     void deleteByProductName(String productName);
+
+    List<Cart> findByReferenceIdAndProductName(String referenceId, String productName);
 }
