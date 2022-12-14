@@ -34,6 +34,9 @@ public class Cart implements Serializable {
     @Column(name = "quantity")
     private Integer quantity;
 
+    @Column(name = "consumer_id")
+    private String consumerId;
+
     @ManyToOne
     @JsonIgnoreProperties(value = { "store", "carts" }, allowSetters = true)
     private Product product;
@@ -109,6 +112,19 @@ public class Cart implements Serializable {
         this.quantity = quantity;
     }
 
+    public String getConsumerId() {
+        return this.consumerId;
+    }
+
+    public Cart consumerId(String consumerId) {
+        this.setConsumerId(consumerId);
+        return this;
+    }
+
+    public void setConsumerId(String consumerId) {
+        this.consumerId = consumerId;
+    }
+
     public Product getProduct() {
         return this.product;
     }
@@ -163,6 +179,7 @@ public class Cart implements Serializable {
             ", productName='" + getProductName() + "'" +
             ", price='" + getPrice() + "'" +
             ", quantity=" + getQuantity() +
+            ", consumerId='" + getConsumerId() + "'" +
             "}";
     }
 }

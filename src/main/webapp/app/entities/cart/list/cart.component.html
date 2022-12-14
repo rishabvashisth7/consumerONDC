@@ -37,6 +37,7 @@
           <th scope="col"><span jhiTranslate="bppondcApp.cart.productName">Product Name</span></th>
           <th scope="col"><span jhiTranslate="bppondcApp.cart.price">Price</span></th>
           <th scope="col"><span jhiTranslate="bppondcApp.cart.quantity">Quantity</span></th>
+          <th scope="col"><span jhiTranslate="bppondcApp.cart.consumerId">Consumer Id</span></th>
           <th scope="col"><span jhiTranslate="bppondcApp.cart.product">Product</span></th>
           <th scope="col"><span jhiTranslate="bppondcApp.cart.store">Store</span></th>
           <th scope="col"></th>
@@ -51,6 +52,7 @@
           <td>{{ cart.productName }}</td>
           <td>{{ cart.price }}</td>
           <td>{{ cart.quantity }}</td>
+          <td>{{ cart.consumerId }}</td>
           <td>
             <div *ngIf="cart.product">
               <a [routerLink]="['/product', cart.product?.id, 'view']">{{ cart.product?.id }}</a>

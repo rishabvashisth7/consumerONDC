@@ -4,6 +4,7 @@ import com.infy.bppondc.domain.Cart;
 import com.infy.bppondc.service.dto.CartDTO;
 import java.util.List;
 import java.util.Optional;
+import org.springframework.data.repository.query.Param;
 
 /**
  * Service Interface for managing {@link com.infy.bppondc.domain.Cart}.
@@ -55,6 +56,14 @@ public interface CartService {
      */
     void delete(Long id);
 
+    void deleteByConsumerId(String consumerId);
+
+    void deleteByConsumerIdAndProductName(String consumerId, String productName);
+
+    List<Cart> findByConsumerIdAndProductNameAndStoreId(String consumerId, String productName, Long storeId);
+
+    List<Cart> findByConsumerIdAndProductName(String consumerId, String productName);
+
     void deleteByReferenceId(String referenceId);
 
     void deleteByReferenceIdAndProductName(String referenceId, String productName);
@@ -62,4 +71,7 @@ public interface CartService {
     void deleteByProductName(String productName);
 
     List<Cart> findByReferenceIdAndProductName(String referenceId, String productName);
+
+    void updateQuantity(Integer quant, String consumerId, String productName, Long storeId);
+    // void deleteByConsumerIdAndProductNameAndReferenceId(String consumerId, String productName,String referenceId);
 }

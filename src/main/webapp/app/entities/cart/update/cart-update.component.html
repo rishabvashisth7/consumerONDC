@@ -48,6 +48,18 @@
         </div>
 
         <div class="row mb-3">
+          <label class="form-label" jhiTranslate="bppondcApp.cart.consumerId" for="field_consumerId">Consumer Id</label>
+          <input
+            type="text"
+            class="form-control"
+            name="consumerId"
+            id="field_consumerId"
+            data-cy="consumerId"
+            formControlName="consumerId"
+          />
+        </div>
+
+        <div class="row mb-3">
           <label class="form-label" jhiTranslate="bppondcApp.cart.product" for="field_product">Product</label>
           <select class="form-control" id="field_product" data-cy="product" name="product" formControlName="product">
             <option [ngValue]="null"></option>

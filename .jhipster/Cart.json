@@ -20,6 +20,10 @@
     {
       "fieldName": "quantity",
       "fieldType": "Integer"
+    },
+    {
+      "fieldName": "consumerId",
+      "fieldType": "String"
     }
   ],
   "fluentMethods": true,

@@ -28,6 +28,7 @@ export class CartUpdateComponent implements OnInit {
     productName: [],
     price: [],
     quantity: [],
+    consumerId: [],
     product: [],
     store: [],
   });
@@ -96,6 +97,7 @@ export class CartUpdateComponent implements OnInit {
       productName: cart.productName,
       price: cart.price,
       quantity: cart.quantity,
+      consumerId: cart.consumerId,
       product: cart.product,
       store: cart.store,
     });
@@ -128,6 +130,7 @@ export class CartUpdateComponent implements OnInit {
       productName: this.editForm.get(['productName'])!.value,
       price: this.editForm.get(['price'])!.value,
       quantity: this.editForm.get(['quantity'])!.value,
+      consumerId: this.editForm.get(['consumerId'])!.value,
       product: this.editForm.get(['product'])!.value,
       store: this.editForm.get(['store'])!.value,
     };

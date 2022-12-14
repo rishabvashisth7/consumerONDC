@@ -9,25 +9,21 @@ import com.infy.bppondc.service.StoreService;
 import com.infy.bppondc.service.dto.CartDTO;
 import com.infy.bppondc.service.dto.ProductDTO;
 import com.infy.bppondc.service.dto.StoreDTO;
+import io.swagger.v3.oas.annotations.Operation;
 import java.util.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
+@RequestMapping("/api")
 public class SelectController {
-
-    //    Map<String, Map<String, String>> cartBPP1 = new LinkedHashMap<>();
-    //    Map<String, Map<String, String>> cartBPP2 = new LinkedHashMap<>();
 
     private final StoreService storeService;
 
     private final CartService cartService;
 
     private final ProductService productService;
-
-    @Autowired
-    StoreRepository storeRepository;
 
     @Autowired
     ProductRepository productRepository;
@@ -38,18 +34,15 @@ public class SelectController {
         this.productService = productService;
     }
 
+    @Operation(description = "Select products from BPP 1 in the cart")
     @PostMapping("/1001")
     public String bpp1(@RequestBody String product) {
         CartDTO cartDTO = new CartDTO();
         List<CartDTO> cart = cartService.findAll();
-
-        System.out.println("FINDALLL  ::" + storeRepository.findAll());
-
         Optional<StoreDTO> storeDTO = storeService.findOne(Long.parseLong("1001"));
 
-        System.out.println("STOREDTO ))))))--------" + storeDTO);
-
-        System.out.println("****** BPP id 1 is selected for product " + product);
+        //        System.out.println("STOREDTO ))))))--------" + storeDTO);
+        //        System.out.println("****** BPP id 1 is selected for product " + product);
 
         List l = List.of(product.substring(1, product.length() - 1).split(","));
         System.out.println("lllllllllllllllllllllllllllll-------" + l);
@@ -58,55 +51,35 @@ public class SelectController {
 
         int flag = 0;
 
-        //        for (int i = 0; i < cart.size(); i++) {
-        //            Map<String, String> map = new HashMap<>();
-        //            if (cart.get(i).getReferenceId().equals(referenceid)) {
-        //                map.put("ProductName", cart.get(i).getProductName());
-        //                map.put("Price", cart.get(i).getPrice());
-        //                map.put("Quant", cart.get(i).getQuantity().toString());
-        //               // cartRef.add(map);
-        //            }
-        //        }
-
         for (int i = 0; i < productDTOS.size(); ++i) {
             ProductDTO prod = productDTOS.get(i);
-            String name = l.get(2).toString().substring(1, l.get(2).toString().length() - 1);
             String refId = l.get(0).toString().substring(1, l.get(0).toString().length() - 1);
             Integer quant = Integer.valueOf(l.get(1).toString().substring(1, l.get(1).toString().length() - 1));
+            String name = l.get(2).toString().substring(1, l.get(2).toString().length() - 1);
+            Long storeId = Long.valueOf((l.get(3).toString().substring(1, l.get(3).toString().length() - 1)));
+            String customer = l.get(4).toString().substring(1, l.get(4).toString().length() - 1);
             System.out.println("&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&");
-            System.out.println(
-                "cartService.findByReferenceIdAndProductName(refId,name) ::::: - " +
-                cartService.findByReferenceIdAndProductName(refId, name)
-            );
 
-            List<Cart> cartfind = cartService.findByReferenceIdAndProductName(refId, name);
-            // System.out.println("cartfind.get(4).toString() ------------ "+ cartfind.get(0).getProductName() + cartfind.get(0).getQuantity().toString());
+            List<Cart> cartfind = cartService.findByConsumerIdAndProductNameAndStoreId(customer, name, storeId);
             if (prod.getTitle().equals(name) && prod.getStore().getId() == 1001 && cartfind.size() == 0) {
                 cartDTO.setReferenceId(refId);
                 cartDTO.setQuantity(quant);
                 cartDTO.setProductName(name);
                 cartDTO.setStore(storeDTO.get());
+                System.out.println("storeDTO.get() 1001 if-------------------->>>>>>>>" + storeDTO.get());
                 cartDTO.setPrice(prod.getPrice().toString());
+                cartDTO.setConsumerId(customer);
                 cartService.save(cartDTO);
                 flag = 1;
                 break;
             } else if (prod.getTitle().equals(name) && prod.getStore().getId() == 1001 && cartfind.size() != 0) {
-                cartService.deleteByReferenceIdAndProductName(refId, name);
-                System.out.println("cartfind.get(4).toString() ------------ " + cartfind.get(0).getQuantity());
+                System.out.println("inside else ifcartByConsumer.get(4).toString() ------------ " + cartfind.get(0).getQuantity());
                 int total = cartfind.get(0).getQuantity() + quant;
-                System.out.println("Integer.parseInt(cart.get(0).getQuantity().toString()) + quant _______ " + total);
-                cartDTO.setReferenceId(refId);
-                cartDTO.setQuantity(total);
-                cartDTO.setProductName(name);
-                cartDTO.setStore(storeDTO.get());
-                cartDTO.setPrice(prod.getPrice().toString());
-                cartService.update(cartDTO);
+                cartService.updateQuantity(total, customer, name, storeId);
                 flag = 1;
                 break;
             }
         }
-
-        //    System.out.println("CART BPP1 Details :" + cartBPP1);
 
         if (flag == 1) {
             return "Items are selected in Store 1";
@@ -115,20 +88,15 @@ public class SelectController {
         }
     }
 
+    @Operation(description = "Select products from BPP 2 in the cart")
     @PostMapping("/1002")
     public String bpp2(@RequestBody String product) {
         CartDTO cartDTO = new CartDTO();
-
-        // storeRepository.findById(1002L);
-        System.out.println("FINDALLL  ::" + storeRepository.findAll());
-        // storeDTO.setId(Long.parseLong("1002"));
-
         Optional<StoreDTO> storeDTO = storeService.findOne(Long.parseLong("1002"));
-        //  storeDTO.get();
 
         System.out.println("STOREDTO --------" + storeDTO);
 
-        System.out.println("****** BPP id 1 is selected for product " + product);
+        System.out.println("****** BPP id 2 is selected for product " + product);
 
         List l = List.of(product.substring(1, product.length() - 1).split(","));
 
@@ -139,20 +107,37 @@ public class SelectController {
         for (int i = 0; i < productDTOS.size(); ++i) {
             ProductDTO prod = productDTOS.get(i);
             String name = l.get(2).toString().substring(1, l.get(2).toString().length() - 1);
-            if (prod.getTitle().equals(name) && prod.getStore().getId() == 1002) {
-                cartDTO.setReferenceId(l.get(0).toString().substring(1, l.get(0).toString().length() - 1));
+            String refId = l.get(0).toString().substring(1, l.get(0).toString().length() - 1);
+            Integer quant = Integer.valueOf(l.get(1).toString().substring(1, l.get(1).toString().length() - 1));
+            Long storeId = Long.valueOf(l.get(3).toString().substring(1, l.get(3).toString().length() - 1));
+            String customer = l.get(4).toString().substring(1, l.get(4).toString().length() - 1);
 
-                cartDTO.setQuantity(Integer.parseInt(l.get(1).toString().substring(1, l.get(1).toString().length() - 1)));
-                cartDTO.setProductName(l.get(2).toString().substring(1, l.get(2).toString().length() - 1));
+            System.out.println("&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&");
+            System.out.println(
+                "cartService.findByReferenceIdAndProductName(refId,name) ::::: - " +
+                cartService.findByReferenceIdAndProductName(refId, name)
+            );
+
+            List<Cart> cartfind = cartService.findByConsumerIdAndProductNameAndStoreId(customer, name, storeId);
+            if (prod.getTitle().equals(name) && prod.getStore().getId() == 1002 && cartfind.size() == 0) {
+                cartDTO.setReferenceId(refId);
+                cartDTO.setQuantity(quant);
+                cartDTO.setProductName(name);
                 cartDTO.setStore(storeDTO.get());
+                System.out.println("storeDTO.get() 1002 if  -------------------->>>>>>>>" + storeId);
                 cartDTO.setPrice(prod.getPrice().toString());
+                cartDTO.setConsumerId(customer);
                 cartService.save(cartDTO);
+                flag = 1;
+                break;
+            } else if (prod.getTitle().equals(name) && prod.getStore().getId() == 1002 && cartfind.size() != 0) {
+                System.out.println("cartByConsumer.get(4).toString() ------------ " + cartfind.get(0).getQuantity());
+                int total = cartfind.get(0).getQuantity() + quant;
+                cartService.updateQuantity(total, customer, name, storeId);
                 flag = 1;
                 break;
             }
         }
-
-        //   System.out.println("CART BPP1 Details :" + cartBPP2);
 
         if (flag == 1) {
             return "Items are selected in Store 2";
@@ -161,14 +146,15 @@ public class SelectController {
         }
     }
 
-    @RequestMapping("/total/{referenceid}")
-    public Double totalPrice(@PathVariable String referenceid) {
+    @Operation(description = "total price of consumerId")
+    @GetMapping("/totalPriceByConsumerId/{consumerId}")
+    public Double totalPriceByConsumerId(@PathVariable String consumerId) {
         List<CartDTO> cartDTO = cartService.findAll();
         System.out.println(" CartDTO :" + cartDTO);
-        System.out.println("reference" + referenceid);
+        System.out.println("consumerId" + consumerId);
         double sum = 0;
         for (int i = 0; i < cartDTO.size(); i++) {
-            if (cartDTO.get(i).getReferenceId().equals(referenceid)) {
+            if (cartDTO.get(i).getConsumerId().equals(consumerId)) {
                 int quan = cartDTO.get(i).getQuantity();
                 double price = Double.parseDouble(cartDTO.get(i).getPrice());
                 sum += quan * price;
@@ -177,19 +163,41 @@ public class SelectController {
         return sum;
     }
 
-    @RequestMapping("/showCart/{referenceid}")
-    public List<Map<String, String>> showCart(@PathVariable String referenceid) {
+    @Operation(description = "total price using consumerId and storeId")
+    @GetMapping("/totalPriceByConsumerIdAndStoreId/{consumerId}/{storeId}")
+    public Double totalPriceByConsumerIdAndStoreId(
+        @PathVariable(value = "consumerId") String consumerId,
+        @PathVariable(value = "storeId") Long storeId
+    ) {
+        List<CartDTO> cartDTO = cartService.findAll();
+        System.out.println(" CartDTO :" + cartDTO);
+        System.out.println("consumerId" + consumerId);
+        double sum = 0;
+        for (int i = 0; i < cartDTO.size(); i++) {
+            if ((cartDTO.get(i).getConsumerId().equals(consumerId)) && (cartDTO.get(i).getStore().getId().equals(storeId))) {
+                int quan = cartDTO.get(i).getQuantity();
+                double price = Double.parseDouble(cartDTO.get(i).getPrice());
+                sum += quan * price;
+            }
+        }
+        return sum;
+    }
+
+    @Operation(description = "Get List of products using consumerId")
+    @GetMapping("/showCartByConsumerId/{consumerId}")
+    public List<Map<String, String>> showCartByConsumerID(@PathVariable String consumerId) {
         List<CartDTO> cartDTO = cartService.findAll();
         List<Map<String, String>> cartRef = new ArrayList<>();
         System.out.println(" CartDTO :" + cartDTO);
-        System.out.println("reference" + referenceid);
+        System.out.println("consumerId  :" + consumerId);
 
         for (int i = 0; i < cartDTO.size(); i++) {
             Map<String, String> map = new HashMap<>();
-            if (cartDTO.get(i).getReferenceId().equals(referenceid)) {
+            if (cartDTO.get(i).getConsumerId().equals(consumerId)) {
                 map.put("ProductName", cartDTO.get(i).getProductName());
                 map.put("Price", cartDTO.get(i).getPrice());
                 map.put("Quant", cartDTO.get(i).getQuantity().toString());
+                map.put("StoreId", cartDTO.get(i).getStore().getId().toString());
                 cartRef.add(map);
             }
         }
@@ -197,23 +205,10 @@ public class SelectController {
         return cartRef;
     }
 
-    @RequestMapping(value = "/delbyref/{referenceid}", method = RequestMethod.DELETE)
-    public ResponseEntity<String> deleteByReferenceId(@PathVariable String referenceid) {
-        List<CartDTO> cartDTO = cartService.findAll();
-        List<Map<String, String>> cartRef = new ArrayList<>();
-        System.out.println(" CartDTO :" + cartDTO);
-        System.out.println("reference" + referenceid);
+    // TODO 1st API
 
-        for (int i = 0; i < cartDTO.size(); i++) {
-            if (cartDTO.get(i).getReferenceId().equals(referenceid)) {
-                cartService.deleteByReferenceId(referenceid);
-            }
-        }
-        System.out.println("deleted");
-        return ResponseEntity.ok("Items with given reference id is successfully deleted from the cart!!!");
-    }
-
-    @RequestMapping(value = "/delproductName/{productName}", method = RequestMethod.DELETE)
+    @Operation(description = "Delete a product from cart using productName")
+    @DeleteMapping(value = "/delProductName/{productName}")
     public ResponseEntity<String> deleteByProductName(@PathVariable String productName) {
         List<CartDTO> cartDTO = cartService.findAll();
         List<Map<String, String>> cartRef = new ArrayList<>();
@@ -229,23 +224,127 @@ public class SelectController {
         return ResponseEntity.ok("Items with given productName is successfully deleted from the cart!!!");
     }
 
-    @RequestMapping(value = "/delRefProd/{referenceid}", method = RequestMethod.DELETE)
-    public ResponseEntity<String> deleteByReferenceIdAndProductName(@PathVariable String referenceid, @RequestBody String productName) {
+    // TODO 2nd API
+
+    @Operation(description = "Delete a product from cart using consumerId and productName")
+    @DeleteMapping(value = "/delConsumerProd/{consumerId}")
+    public ResponseEntity<String> deleteByConsumerIdAndProductName(@PathVariable String consumerId, @RequestBody String productName) {
         List<CartDTO> cartDTO = cartService.findAll();
         System.out.println("CartDTO :" + cartDTO);
         System.out.println("productName" + productName);
         int flag = 0;
         for (int i = 0; i < cartDTO.size(); i++) {
-            if ((cartDTO.get(i).getProductName().equals(productName)) && (cartDTO.get(i).getReferenceId().equals(referenceid))) {
-                cartService.deleteByReferenceIdAndProductName(referenceid, productName);
+            if ((cartDTO.get(i).getProductName().equals(productName)) && (cartDTO.get(i).getConsumerId().equals(consumerId))) {
+                cartService.deleteByConsumerIdAndProductName(consumerId, productName);
                 flag = 1;
             }
         }
 
         if (flag == 1) {
-            return ResponseEntity.ok("Items with given reference id & productName is present and successfully deleted from the cart!!!");
+            return ResponseEntity.ok("Items with given Consumer Id id & productName is present and successfully deleted from the cart!!!");
         } else {
-            return ResponseEntity.ok("Items with given reference id & productName is not present in cart!!");
+            return ResponseEntity.ok("Items with given Consumer Id & productName is not present in cart!!");
         }
     }
+
+    //TODO 3rd API
+
+    @Operation(description = "Get List of products using consumerId and productName and storeId")
+    @GetMapping(value = "showByConsumerProductStoreId/{consumerId}")
+    public List<Map<String, String>> showByConsumerProductStoreId(
+        @PathVariable(value = "consumerId") String consumerId,
+        @RequestBody String productName,
+        @RequestBody Long storeId
+    ) {
+        List<Cart> cart = cartService.findByConsumerIdAndProductNameAndStoreId(consumerId, productName, storeId);
+        List<Map<String, String>> cartRef = new ArrayList<>();
+        System.out.println("CartDTO :" + cart);
+        System.out.println("productName" + productName);
+
+        for (int i = 0; i < cart.size(); i++) {
+            Map<String, String> map = new HashMap<>();
+            if (
+                (cart.get(i).getProductName().equals(productName)) &&
+                (cart.get(i).getConsumerId().equals(consumerId)) &&
+                (cart.get(i).getStore().getId().equals(storeId))
+            ) {
+                map.put("ProductName", cart.get(i).getProductName());
+                map.put("Price", cart.get(i).getPrice());
+                map.put("Quant", cart.get(i).getQuantity().toString());
+
+                cartRef.add(map);
+            }
+        }
+        System.out.println(cartRef);
+        return cartRef;
+    }
 }
+//    @RequestMapping("/totalPriceByReferenceId/{referenceid}")
+//    public Double totalPriceByReferenceId(@PathVariable String referenceid) {
+//        List<CartDTO> cartDTO = cartService.findAll();
+//        System.out.println(" CartDTO :" + cartDTO);
+//        System.out.println("reference" + referenceid);
+//        double sum = 0;
+//        for (int i = 0; i < cartDTO.size(); i++) {
+//            if (cartDTO.get(i).getReferenceId().equals(referenceid)) {
+//                int quan = cartDTO.get(i).getQuantity();
+//                double price = Double.parseDouble(cartDTO.get(i).getPrice());
+//                sum += quan * price;
+//            }
+//        }
+//        return sum;
+//    }
+//    @RequestMapping(value = "/delRefProd/{referenceid}", method = RequestMethod.DELETE)
+//    public ResponseEntity<String> deleteByReferenceIdAndProductName(@PathVariable String referenceid, @RequestBody String productName) {
+//        List<CartDTO> cartDTO = cartService.findAll();
+//        System.out.println("CartDTO :" + cartDTO);
+//        System.out.println("productName" + productName);
+//        int flag = 0;
+//        for (int i = 0; i < cartDTO.size(); i++) {
+//            if ((cartDTO.get(i).getProductName().equals(productName)) && (cartDTO.get(i).getReferenceId().equals(referenceid))) {
+//                cartService.deleteByReferenceIdAndProductName(referenceid, productName);
+//                flag = 1;
+//            }
+//
+//        }
+//
+//        if (flag == 1) {
+//            return ResponseEntity.ok("Items with given reference id & productName is present and successfully deleted from the cart!!!");
+//        } else {
+//            return ResponseEntity.ok("Items with given reference id & productName is not present in cart!!");
+//        }
+//    }
+//    @RequestMapping(value = "/delbyref/{referenceid}", method = RequestMethod.DELETE)
+//    public ResponseEntity<String> deleteByReferenceId(@PathVariable String referenceid) {
+//        List<CartDTO> cartDTO = cartService.findAll();
+//        List<Map<String, String>> cartRef = new ArrayList<>();
+//        System.out.println(" CartDTO :" + cartDTO);
+//        System.out.println("reference" + referenceid);
+//
+//        for (int i = 0; i < cartDTO.size(); i++) {
+//            if (cartDTO.get(i).getReferenceId().equals(referenceid)) {
+//                cartService.deleteByReferenceId(referenceid);
+//            }
+//        }
+//        System.out.println("deleted");
+//        return ResponseEntity.ok("Items with given reference id is successfully deleted from the cart!!!");
+//    }
+//    @RequestMapping("/showCartByReferenceId/{referenceid}")
+//    public List<Map<String, String>> showCartByRefrenceId(@PathVariable String referenceid) {
+//        List<CartDTO> cartDTO = cartService.findAll();
+//        List<Map<String, String>> cartRef = new ArrayList<>();
+//        System.out.println(" CartDTO :" + cartDTO);
+//        System.out.println("reference" + referenceid);
+//
+//        for (int i = 0; i < cartDTO.size(); i++) {
+//            Map<String, String> map = new HashMap<>();
+//            if (cartDTO.get(i).getReferenceId().equals(referenceid)) {
+//                map.put("ProductName", cartDTO.get(i).getProductName());
+//                map.put("Price", cartDTO.get(i).getPrice());
+//                map.put("Quant", cartDTO.get(i).getQuantity().toString());
+//                cartRef.add(map);
+//            }
+//        }
+//        System.out.println(cartRef);
+//        return cartRef;
+//    }

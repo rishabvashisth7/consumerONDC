@@ -18,6 +18,8 @@ public class CartDTO implements Serializable {
 
     private Integer quantity;
 
+    private String consumerId;
+
     private ProductDTO product;
 
     private StoreDTO store;
@@ -60,6 +62,14 @@ public class CartDTO implements Serializable {
 
     public void setQuantity(Integer quantity) {
         this.quantity = quantity;
+    }
+
+    public String getConsumerId() {
+        return consumerId;
+    }
+
+    public void setConsumerId(String consumerId) {
+        this.consumerId = consumerId;
     }
 
     public ProductDTO getProduct() {
@@ -108,6 +118,7 @@ public class CartDTO implements Serializable {
             ", productName='" + getProductName() + "'" +
             ", price='" + getPrice() + "'" +
             ", quantity=" + getQuantity() +
+            ", consumerId='" + getConsumerId() + "'" +
             ", product=" + getProduct() +
             ", store=" + getStore() +
             "}";

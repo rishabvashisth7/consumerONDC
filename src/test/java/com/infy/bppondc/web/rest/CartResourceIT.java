@@ -43,6 +43,9 @@ class CartResourceIT {
     private static final Integer DEFAULT_QUANTITY = 1;
     private static final Integer UPDATED_QUANTITY = 2;
 
+    private static final String DEFAULT_CONSUMER_ID = "AAAAAAAAAA";
+    private static final String UPDATED_CONSUMER_ID = "BBBBBBBBBB";
+
     private static final String ENTITY_API_URL = "/api/carts";
     private static final String ENTITY_API_URL_ID = ENTITY_API_URL + "/{id}";
 
@@ -74,7 +77,8 @@ class CartResourceIT {
             .referenceId(DEFAULT_REFERENCE_ID)
             .productName(DEFAULT_PRODUCT_NAME)
             .price(DEFAULT_PRICE)
-            .quantity(DEFAULT_QUANTITY);
+            .quantity(DEFAULT_QUANTITY)
+            .consumerId(DEFAULT_CONSUMER_ID);
         return cart;
     }
 
@@ -89,7 +93,8 @@ class CartResourceIT {
             .referenceId(UPDATED_REFERENCE_ID)
             .productName(UPDATED_PRODUCT_NAME)
             .price(UPDATED_PRICE)
-            .quantity(UPDATED_QUANTITY);
+            .quantity(UPDATED_QUANTITY)
+            .consumerId(UPDATED_CONSUMER_ID);
         return cart;
     }
 
@@ -116,6 +121,7 @@ class CartResourceIT {
         assertThat(testCart.getProductName()).isEqualTo(DEFAULT_PRODUCT_NAME);
         assertThat(testCart.getPrice()).isEqualTo(DEFAULT_PRICE);
         assertThat(testCart.getQuantity()).isEqualTo(DEFAULT_QUANTITY);
+        assertThat(testCart.getConsumerId()).isEqualTo(DEFAULT_CONSUMER_ID);
     }
 
     @Test
@@ -152,7 +158,8 @@ class CartResourceIT {
             .andExpect(jsonPath("$.[*].referenceId").value(hasItem(DEFAULT_REFERENCE_ID)))
             .andExpect(jsonPath("$.[*].productName").value(hasItem(DEFAULT_PRODUCT_NAME)))
             .andExpect(jsonPath("$.[*].price").value(hasItem(DEFAULT_PRICE)))
-            .andExpect(jsonPath("$.[*].quantity").value(hasItem(DEFAULT_QUANTITY)));
+            .andExpect(jsonPath("$.[*].quantity").value(hasItem(DEFAULT_QUANTITY)))
+            .andExpect(jsonPath("$.[*].consumerId").value(hasItem(DEFAULT_CONSUMER_ID)));
     }
 
     @Test
@@ -170,7 +177,8 @@ class CartResourceIT {
             .andExpect(jsonPath("$.referenceId").value(DEFAULT_REFERENCE_ID))
             .andExpect(jsonPath("$.productName").value(DEFAULT_PRODUCT_NAME))
             .andExpect(jsonPath("$.price").value(DEFAULT_PRICE))
-            .andExpect(jsonPath("$.quantity").value(DEFAULT_QUANTITY));
+            .andExpect(jsonPath("$.quantity").value(DEFAULT_QUANTITY))
+            .andExpect(jsonPath("$.consumerId").value(DEFAULT_CONSUMER_ID));
     }
 
     @Test
@@ -192,7 +200,12 @@ class CartResourceIT {
         Cart updatedCart = cartRepository.findById(cart.getId()).get();
         // Disconnect from session so that the updates on updatedCart are not directly saved in db
         em.detach(updatedCart);
-        updatedCart.referenceId(UPDATED_REFERENCE_ID).productName(UPDATED_PRODUCT_NAME).price(UPDATED_PRICE).quantity(UPDATED_QUANTITY);
+        updatedCart
+            .referenceId(UPDATED_REFERENCE_ID)
+            .productName(UPDATED_PRODUCT_NAME)
+            .price(UPDATED_PRICE)
+            .quantity(UPDATED_QUANTITY)
+            .consumerId(UPDATED_CONSUMER_ID);
         CartDTO cartDTO = cartMapper.toDto(updatedCart);
 
         restCartMockMvc
@@ -211,6 +224,7 @@ class CartResourceIT {
         assertThat(testCart.getProductName()).isEqualTo(UPDATED_PRODUCT_NAME);
         assertThat(testCart.getPrice()).isEqualTo(UPDATED_PRICE);
         assertThat(testCart.getQuantity()).isEqualTo(UPDATED_QUANTITY);
+        assertThat(testCart.getConsumerId()).isEqualTo(UPDATED_CONSUMER_ID);
     }
 
     @Test
@@ -290,7 +304,7 @@ class CartResourceIT {
         Cart partialUpdatedCart = new Cart();
         partialUpdatedCart.setId(cart.getId());
 
-        partialUpdatedCart.referenceId(UPDATED_REFERENCE_ID).price(UPDATED_PRICE);
+        partialUpdatedCart.referenceId(UPDATED_REFERENCE_ID).price(UPDATED_PRICE).consumerId(UPDATED_CONSUMER_ID);
 
         restCartMockMvc
             .perform(
@@ -308,6 +322,7 @@ class CartResourceIT {
         assertThat(testCart.getProductName()).isEqualTo(DEFAULT_PRODUCT_NAME);
         assertThat(testCart.getPrice()).isEqualTo(UPDATED_PRICE);
         assertThat(testCart.getQuantity()).isEqualTo(DEFAULT_QUANTITY);
+        assertThat(testCart.getConsumerId()).isEqualTo(UPDATED_CONSUMER_ID);
     }
 
     @Test
@@ -326,7 +341,8 @@ class CartResourceIT {
             .referenceId(UPDATED_REFERENCE_ID)
             .productName(UPDATED_PRODUCT_NAME)
             .price(UPDATED_PRICE)
-            .quantity(UPDATED_QUANTITY);
+            .quantity(UPDATED_QUANTITY)
+            .consumerId(UPDATED_CONSUMER_ID);
 
         restCartMockMvc
             .perform(
@@ -344,6 +360,7 @@ class CartResourceIT {
         assertThat(testCart.getProductName()).isEqualTo(UPDATED_PRODUCT_NAME);
         assertThat(testCart.getPrice()).isEqualTo(UPDATED_PRICE);
         assertThat(testCart.getQuantity()).isEqualTo(UPDATED_QUANTITY);
+        assertThat(testCart.getConsumerId()).isEqualTo(UPDATED_CONSUMER_ID);
     }
 
     @Test

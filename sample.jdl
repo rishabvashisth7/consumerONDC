@@ -12,7 +12,8 @@ entity Cart{
     referenceId String,
     productName String,
     price String,
-    quantity Integer
+    quantity Integer,
+    consumerId String
 }
 
 entity Product {

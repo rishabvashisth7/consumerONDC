@@ -4,6 +4,7 @@ import com.infy.bppondc.repository.StoreRepository;
 import com.infy.bppondc.service.StoreService;
 import com.infy.bppondc.service.dto.StoreDTO;
 import com.infy.bppondc.web.rest.errors.BadRequestAlertException;
+import io.swagger.v3.oas.annotations.Operation;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.List;
@@ -47,6 +48,8 @@ public class StoreResource {
      * @return the {@link ResponseEntity} with status {@code 201 (Created)} and with body the new storeDTO, or with status {@code 400 (Bad Request)} if the store has already an ID.
      * @throws URISyntaxException if the Location URI syntax is incorrect.
      */
+
+    @Operation(description = "Create a new store")
     @PostMapping("/stores")
     public ResponseEntity<StoreDTO> createStore(@RequestBody StoreDTO storeDTO) throws URISyntaxException {
         log.debug("REST request to save Store : {}", storeDTO);
@@ -70,6 +73,7 @@ public class StoreResource {
      * or with status {@code 500 (Internal Server Error)} if the storeDTO couldn't be updated.
      * @throws URISyntaxException if the Location URI syntax is incorrect.
      */
+    @Operation(description = "Updates an existing store")
     @PutMapping("/stores/{id}")
     public ResponseEntity<StoreDTO> updateStore(
         @PathVariable(value = "id", required = false) final Long id,
@@ -135,6 +139,8 @@ public class StoreResource {
      *
      * @return the {@link ResponseEntity} with status {@code 200 (OK)} and the list of stores in body.
      */
+
+    @Operation(description = "get all the stores")
     @GetMapping("/stores")
     public List<StoreDTO> getAllStores() {
         log.debug("REST request to get all Stores");
@@ -147,6 +153,8 @@ public class StoreResource {
      * @param id the id of the storeDTO to retrieve.
      * @return the {@link ResponseEntity} with status {@code 200 (OK)} and with body the storeDTO, or with status {@code 404 (Not Found)}.
      */
+
+    @Operation(description = "get the \"id\" store")
     @GetMapping("/stores/{id}")
     public ResponseEntity<StoreDTO> getStore(@PathVariable Long id) {
         log.debug("REST request to get Store : {}", id);
@@ -160,6 +168,7 @@ public class StoreResource {
      * @param id the id of the storeDTO to delete.
      * @return the {@link ResponseEntity} with status {@code 204 (NO_CONTENT)}.
      */
+    @Operation(description = "delete the \"id\" store")
     @DeleteMapping("/stores/{id}")
     public ResponseEntity<Void> deleteStore(@PathVariable Long id) {
         log.debug("REST request to delete Store : {}", id);

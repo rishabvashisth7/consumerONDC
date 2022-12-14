@@ -4,11 +4,13 @@ import com.infy.bppondc.repository.CartRepository;
 import com.infy.bppondc.service.CartService;
 import com.infy.bppondc.service.dto.CartDTO;
 import com.infy.bppondc.web.rest.errors.BadRequestAlertException;
+import io.swagger.v3.oas.annotations.Operation;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
+import liquibase.pro.packaged.O;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
@@ -47,6 +49,7 @@ public class CartResource {
      * @return the {@link ResponseEntity} with status {@code 201 (Created)} and with body the new cartDTO, or with status {@code 400 (Bad Request)} if the cart has already an ID.
      * @throws URISyntaxException if the Location URI syntax is incorrect.
      */
+    @Operation(description = "create cart")
     @PostMapping("/carts")
     public ResponseEntity<CartDTO> createCart(@RequestBody CartDTO cartDTO) throws URISyntaxException {
         log.debug("REST request to save Cart : {}", cartDTO);
@@ -70,6 +73,7 @@ public class CartResource {
      * or with status {@code 500 (Internal Server Error)} if the cartDTO couldn't be updated.
      * @throws URISyntaxException if the Location URI syntax is incorrect.
      */
+    @Operation(description = "updates an existing cart")
     @PutMapping("/carts/{id}")
     public ResponseEntity<CartDTO> updateCart(@PathVariable(value = "id", required = false) final Long id, @RequestBody CartDTO cartDTO)
         throws URISyntaxException {
@@ -133,6 +137,7 @@ public class CartResource {
      *
      * @return the {@link ResponseEntity} with status {@code 200 (OK)} and the list of carts in body.
      */
+    @Operation(description = "get all the carts")
     @GetMapping("/carts")
     public List<CartDTO> getAllCarts() {
         log.debug("REST request to get all Carts");
@@ -145,6 +150,8 @@ public class CartResource {
      * @param id the id of the cartDTO to retrieve.
      * @return the {@link ResponseEntity} with status {@code 200 (OK)} and with body the cartDTO, or with status {@code 404 (Not Found)}.
      */
+
+    @Operation(description = "get the \"id\" cart")
     @GetMapping("/carts/{id}")
     public ResponseEntity<CartDTO> getCart(@PathVariable Long id) {
         log.debug("REST request to get Cart : {}", id);
@@ -158,6 +165,7 @@ public class CartResource {
      * @param id the id of the cartDTO to delete.
      * @return the {@link ResponseEntity} with status {@code 204 (NO_CONTENT)}.
      */
+    @Operation(description = "delete the \"id\" cart")
     @DeleteMapping("/carts/{id}")
     public ResponseEntity<Void> deleteCart(@PathVariable Long id) {
         log.debug("REST request to delete Cart : {}", id);

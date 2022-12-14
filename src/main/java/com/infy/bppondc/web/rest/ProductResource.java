@@ -4,6 +4,7 @@ import com.infy.bppondc.repository.ProductRepository;
 import com.infy.bppondc.service.ProductService;
 import com.infy.bppondc.service.dto.ProductDTO;
 import com.infy.bppondc.web.rest.errors.BadRequestAlertException;
+import io.swagger.v3.oas.annotations.Operation;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.List;
@@ -49,6 +50,8 @@ public class ProductResource {
      * @return the {@link ResponseEntity} with status {@code 201 (Created)} and with body the new productDTO, or with status {@code 400 (Bad Request)} if the product has already an ID.
      * @throws URISyntaxException if the Location URI syntax is incorrect.
      */
+
+    @Operation(description = "add a new product")
     @PostMapping("/products")
     public ResponseEntity<ProductDTO> createProduct(@Valid @RequestBody ProductDTO productDTO) throws URISyntaxException {
         log.debug("REST request to save Product : {}", productDTO);
@@ -72,6 +75,8 @@ public class ProductResource {
      * or with status {@code 500 (Internal Server Error)} if the productDTO couldn't be updated.
      * @throws URISyntaxException if the Location URI syntax is incorrect.
      */
+
+    @Operation(description = " Update an existing product")
     @PutMapping("/products/{id}")
     public ResponseEntity<ProductDTO> updateProduct(
         @PathVariable(value = "id", required = false) final Long id,
@@ -137,6 +142,7 @@ public class ProductResource {
      *
      * @return the {@link ResponseEntity} with status {@code 200 (OK)} and the list of products in body.
      */
+    @Operation(description = "get all product")
     @GetMapping("/products")
     public List<ProductDTO> getAllProducts() {
         log.debug("REST request to get all Products");
@@ -149,6 +155,7 @@ public class ProductResource {
      * @param id the id of the productDTO to retrieve.
      * @return the {@link ResponseEntity} with status {@code 200 (OK)} and with body the productDTO, or with status {@code 404 (Not Found)}.
      */
+    @Operation(description = "get a product using id")
     @GetMapping("/products/{id}")
     public ResponseEntity<ProductDTO> getProduct(@PathVariable Long id) {
         log.debug("REST request to get Product : {}", id);
@@ -162,6 +169,7 @@ public class ProductResource {
      * @param id the id of the productDTO to delete.
      * @return the {@link ResponseEntity} with status {@code 204 (NO_CONTENT)}.
      */
+    @Operation(description = "delete a product using id")
     @DeleteMapping("/products/{id}")
     public ResponseEntity<Void> deleteProduct(@PathVariable Long id) {
         log.debug("REST request to delete Product : {}", id);

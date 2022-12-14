@@ -25,6 +25,7 @@ describe('Cart Service', () => {
       productName: 'AAAAAAA',
       price: 'AAAAAAA',
       quantity: 0,
+      consumerId: 'AAAAAAA',
     };
   });
 
@@ -64,6 +65,7 @@ describe('Cart Service', () => {
           productName: 'BBBBBB',
           price: 'BBBBBB',
           quantity: 1,
+          consumerId: 'BBBBBB',
         },
         elemDefault
       );
@@ -104,6 +106,7 @@ describe('Cart Service', () => {
           productName: 'BBBBBB',
           price: 'BBBBBB',
           quantity: 1,
+          consumerId: 'BBBBBB',
         },
         elemDefault
       );
@@ -155,7 +158,7 @@ describe('Cart Service', () => {
       });
 
       it('should add only unique Cart to an array', () => {
-        const cartArray: ICart[] = [{ id: 123 }, { id: 456 }, { id: 44183 }];
+        const cartArray: ICart[] = [{ id: 123 }, { id: 456 }, { id: 15648 }];
         const cartCollection: ICart[] = [{ id: 123 }];
         expectedResult = service.addCartToCollectionIfMissing(cartCollection, ...cartArray);
         expect(expectedResult).toHaveLength(3);

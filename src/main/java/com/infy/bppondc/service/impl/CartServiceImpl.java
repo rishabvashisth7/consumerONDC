@@ -83,16 +83,41 @@ public class CartServiceImpl implements CartService {
         cartRepository.deleteById(id);
     }
 
+    @Override
+    public void deleteByConsumerId(String consumerId) {
+        log.debug("Request to delete Cart : {}", consumerId);
+        cartRepository.deleteByConsumerId(consumerId);
+    }
+
+    @Override
+    public void deleteByConsumerIdAndProductName(String consumerId, String productName) {
+        log.debug("Request to delete Cart consumerId and ProductName : {},{}", consumerId, productName);
+        cartRepository.deleteByConsumerIdAndProductName(consumerId, productName);
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public List<Cart> findByConsumerIdAndProductNameAndStoreId(String consumerId, String productName, Long storeId) {
+        log.debug("Request to get Cart by consumerId and product name: {} {} store Id as {}", consumerId, productName, storeId);
+        return cartRepository.findByConsumerIdAndProductNameAndStoreId(consumerId, productName, storeId);
+    }
+
+    @Transactional(readOnly = true)
+    public List<Cart> findByConsumerIdAndProductName(String consumerId, String productName) {
+        log.debug("Request to get Cart by consumerId and product name: {} {} ", consumerId, productName);
+        return cartRepository.findByConsumerIdAndProductName(consumerId, productName);
+    }
+
     @Transactional
     public void deleteByReferenceId(String referenceId) {
-        log.debug("Request to delete Cart : {}", referenceId);
+        log.debug("Request to delete Cart by using referenceId: {}", referenceId);
         cartRepository.deleteByReferenceId(referenceId);
     }
 
     @Override
     @Transactional
     public void deleteByReferenceIdAndProductName(String referenceId, String productName) {
-        log.debug("Request to delete Cart : {},{}", referenceId, productName);
+        log.debug("Request to delete Cart by using referenceId and productName : {},{}", referenceId, productName);
         cartRepository.deleteByReferenceIdAndProductName(referenceId, productName);
     }
 
@@ -108,4 +133,15 @@ public class CartServiceImpl implements CartService {
         log.debug("Request to get Cart by reference id and product name: {} {}", referenceId, productName);
         return cartRepository.findByReferenceIdAndProductName(referenceId, productName);
     }
+
+    @Override
+    @Transactional
+    public void updateQuantity(Integer quant, String consumerId, String productName, Long storeId) {
+        log.debug("Request to get Cart by consumerId and product name: {} {} store Id as {}", consumerId, productName, storeId);
+        cartRepository.updateQuantity(quant, consumerId, productName, storeId);
+    }
+    //    @Override
+    //    public void deleteByConsumerIdAndProductNameAndReferenceId(String consumerId, String productName, String referenceId) {
+    //
+    //    }
 }

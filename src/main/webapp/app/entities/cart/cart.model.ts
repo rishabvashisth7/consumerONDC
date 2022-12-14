@@ -7,6 +7,7 @@ export interface ICart {
   productName?: string | null;
   price?: string | null;
   quantity?: number | null;
+  consumerId?: string | null;
   product?: IProduct | null;
   store?: IStore | null;
 }
@@ -18,6 +19,7 @@ export class Cart implements ICart {
     public productName?: string | null,
     public price?: string | null,
     public quantity?: number | null,
+    public consumerId?: string | null,
     public product?: IProduct | null,
     public store?: IStore | null
   ) {}

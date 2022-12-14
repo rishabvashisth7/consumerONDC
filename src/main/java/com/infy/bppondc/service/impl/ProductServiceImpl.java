@@ -82,21 +82,4 @@ public class ProductServiceImpl implements ProductService {
         log.debug("Request to delete Product : {}", id);
         productRepository.deleteById(id);
     }
-    //    @Override
-    //    public List<ProductDTO> findByTitle(String productName) {
-    //        log.debug(" Request to get all the Products with given productName");
-    //
-    //        return productRepository.findByTitle(productName)
-    //            .stream()
-    //            .map(product -> product.getStore())
-    //            .map(productMapper::toDto).collect(Collectors.toCollection(LinkedList::new));
-    //
-    //
-    ////        return scheduledMovieRepository
-    ////            .findAllByScreenTheaterCityAndMovieLanguageAndMovieCategoryAndStatusAndPreviewDateLessThanEqualAndEndDateGreaterThanEqual(city,language,category,status ,LocalDate.now(), LocalDate.now())
-    ////            .stream()
-    ////            .map(scheduledMovie -> scheduledMovie.getMovie())
-    ////            .map(movieMapper::toDto)
-    ////            .collect(Collectors.toCollection(HashSet::new));
-    //    }
 }
