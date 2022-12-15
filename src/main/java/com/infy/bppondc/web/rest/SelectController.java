@@ -147,7 +147,7 @@ public class SelectController {
     }
 
     @Operation(description = "total price of consumerId")
-    @GetMapping("/totalPriceByConsumerId/{consumerId}")
+    @PostMapping("/totalPriceByConsumerId/{consumerId}")
     public Double totalPriceByConsumerId(@PathVariable String consumerId) {
         List<CartDTO> cartDTO = cartService.findAll();
         System.out.println(" CartDTO :" + cartDTO);
@@ -164,7 +164,7 @@ public class SelectController {
     }
 
     @Operation(description = "total price using consumerId and storeId")
-    @GetMapping("/totalPriceByConsumerIdAndStoreId/{consumerId}/{storeId}")
+    @PostMapping("/totalPriceByConsumerIdAndStoreId/{consumerId}/{storeId}")
     public Double totalPriceByConsumerIdAndStoreId(
         @PathVariable(value = "consumerId") String consumerId,
         @PathVariable(value = "storeId") Long storeId
