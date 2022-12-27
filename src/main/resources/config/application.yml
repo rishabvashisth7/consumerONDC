@@ -16,6 +16,7 @@
 
 ---
 # Conditionally disable springdoc on missing api-docs profile
+
 spring:
   config:
     activate:
@@ -91,26 +92,72 @@ management:
             enabled: true
 
 spring:
-  autoconfigure:
-    exclude: org.springframework.boot.actuate.autoconfigure.metrics.jdbc.DataSourcePoolMetricsAutoConfiguration
-  application:
-    name: bppondc
+  kafka:
+    bootstrap-servers: pkc-41p56.asia-south1.gcp.confluent.cloud:9092
+    properties:
+      security:
+        protocol: SASL_SSL
+      sasl:
+        jaas:
+          config: org.apache.kafka.common.security.plain.PlainLoginModule required username='GNNBXWXOVDR64WKC' password='slBK07QN3JD6GfuYZp7Vahhyp3gEl71lMU8JLJxLJbSGcAsupYrUs38AjIYxjtJ1';
+        mechanism: PLAIN
+    producer:
+      #      properties:
+      #        spring:
+      #          json:
+      ##            add:
+      ##              type:
+      ##                headers: false
+      #      key-serializer: org.apache.kafka.common.serialization.StringSerializer
+      value-serializer: org.springframework.kafka.support.serializer.JsonSerializer
+    consumer:
+      auto-offset-reset: latest
+      #      enable-auto-commit: false
+      #      key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+      value-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+      properties:
+        spring:
+          json:
+            trusted:
+              packages: com.infy.*
+          #            use:
+          #              type:
+          #                headers: false
+          deserializer:
+            value:
+              delegate:
+                class: org.springframework.kafka.support.serializer.JsonDeserializer
+  #  autoconfigure:
+  #    exclude: org.springframework.boot.actuate.autoconfigure.metrics.jdbc.DataSourcePoolMetricsAutoConfiguration
+  #  application:
+  #    name: bppondc
   cloud:
     stream:
       kafka:
-        binder:
-          replicationFactor: 1
-          auto-create-topics: true
-          brokers: localhost:9092
-      bindings:
-        binding-in-sse:
-          destination: sse-topic
-          content-type: text/plain
-          group: bppondc
-        binding-out-sse:
-          destination: sse-topic
-          content-type: text/plain
-          group: bppondc
+        streams:
+          binder:
+            configuration:
+              #              value:
+              #                serializer: org.apache.kafka.common.serialization.StringSerializer
+
+              replication:
+                factor=3:
+  #  cloud:
+  #    stream:
+  #      kafka:
+  #        binder:
+  #          replicationFactor: 1
+  #          auto-create-topics: true
+  #          brokers: localhost:9092
+  #      bindings:
+  #        binding-in-sse:
+  #          destination: sse-topic
+  #          content-type: text/plain
+  #          group: bppondc
+  #        binding-out-sse:
+  #          destination: sse-topic
+  #          content-type: text/plain
+  #          group: bppondc
   profiles:
     # The commented value for `active` can be replaced with valid Spring profiles to load.
     # Otherwise, it will be filled in by maven when building the JAR file
@@ -171,7 +218,10 @@ spring:
   output:
     ansi:
       console-available: true
-
+#JsonSerializer:
+#  ADD_TYPE_INFO_HEADERS: false
+#JsonDeserializer:
+#  VALUE_DEFAULT_TYPE: com.infy.bppondc.service.*
 server:
   servlet:
     session:

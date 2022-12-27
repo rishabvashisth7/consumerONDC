@@ -14,7 +14,12 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.autoconfigure.liquibase.LiquibaseProperties;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
+import org.springframework.context.annotation.Bean;
 import org.springframework.core.env.Environment;
+import org.springframework.kafka.support.converter.ByteArrayJsonMessageConverter;
+import org.springframework.kafka.support.converter.JsonMessageConverter;
+import org.springframework.kafka.support.converter.RecordMessageConverter;
+import org.springframework.kafka.support.converter.StringJsonMessageConverter;
 import tech.jhipster.config.DefaultProfileUtil;
 import tech.jhipster.config.JHipsterConstants;
 
@@ -29,6 +34,24 @@ public class BppondcApp {
     public BppondcApp(Environment env) {
         this.env = env;
     }
+
+    // changes for kafka
+    @Bean
+    public StringJsonMessageConverter jsonConverter() {
+        return new StringJsonMessageConverter();
+    }
+
+    @Bean
+    public RecordMessageConverter messageConverter() {
+        return new StringJsonMessageConverter();
+    }
+
+    @Bean
+    public JsonMessageConverter jsonMessageConverter() {
+        return new ByteArrayJsonMessageConverter();
+    }
+
+    // end
 
     /**
      * Initializes bppondc.
