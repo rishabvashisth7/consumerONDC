@@ -41,15 +41,15 @@ public class BppondcApp {
         return new StringJsonMessageConverter();
     }
 
-    @Bean
-    public RecordMessageConverter messageConverter() {
-        return new StringJsonMessageConverter();
-    }
-
-    @Bean
-    public JsonMessageConverter jsonMessageConverter() {
-        return new ByteArrayJsonMessageConverter();
-    }
+    //    @Bean
+    //    public RecordMessageConverter messageConverter() {
+    //        return new StringJsonMessageConverter();
+    //    }
+    //
+    //    @Bean
+    //    public JsonMessageConverter jsonMessageConverter() {
+    //        return new ByteArrayJsonMessageConverter();
+    //    }
 
     // end
 

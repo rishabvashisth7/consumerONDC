@@ -1,8 +1,6 @@
 package com.infy.bppondc.web.rest;
 
 import com.infy.bppondc.domain.Cart;
-import com.infy.bppondc.repository.ProductRepository;
-import com.infy.bppondc.repository.StoreRepository;
 import com.infy.bppondc.service.CartService;
 import com.infy.bppondc.service.ProductService;
 import com.infy.bppondc.service.StoreService;
@@ -11,7 +9,6 @@ import com.infy.bppondc.service.dto.ProductDTO;
 import com.infy.bppondc.service.dto.StoreDTO;
 import io.swagger.v3.oas.annotations.Operation;
 import java.util.*;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -24,9 +21,6 @@ public class SelectController {
     private final CartService cartService;
 
     private final ProductService productService;
-
-    @Autowired
-    ProductRepository productRepository;
 
     public SelectController(StoreService storeService, CartService cartService, ProductService productService) {
         this.storeService = storeService;
@@ -41,18 +35,13 @@ public class SelectController {
         List<CartDTO> cart = cartService.findAll();
         Optional<StoreDTO> storeDTO = storeService.findOne(Long.parseLong("1001"));
 
-        //        System.out.println("STOREDTO ))))))--------" + storeDTO);
-        //        System.out.println("****** BPP id 1 is selected for product " + product);
-
         List l = List.of(product.substring(1, product.length() - 1).split(","));
-        System.out.println("lllllllllllllllllllllllllllll-------" + l);
+        System.out.println("-------" + l);
 
         List<ProductDTO> productDTOS = productService.findAll();
-
         int flag = 0;
 
-        for (int i = 0; i < productDTOS.size(); ++i) {
-            ProductDTO prod = productDTOS.get(i);
+        for (ProductDTO prod : productDTOS) {
             String refId = l.get(0).toString().substring(1, l.get(0).toString().length() - 1);
             Integer quant = Integer.valueOf(l.get(1).toString().substring(1, l.get(1).toString().length() - 1));
             String name = l.get(2).toString().substring(1, l.get(2).toString().length() - 1);
@@ -104,8 +93,7 @@ public class SelectController {
 
         int flag = 0;
 
-        for (int i = 0; i < productDTOS.size(); ++i) {
-            ProductDTO prod = productDTOS.get(i);
+        for (ProductDTO prod : productDTOS) {
             String name = l.get(2).toString().substring(1, l.get(2).toString().length() - 1);
             String refId = l.get(0).toString().substring(1, l.get(0).toString().length() - 1);
             Integer quant = Integer.valueOf(l.get(1).toString().substring(1, l.get(1).toString().length() - 1));
@@ -279,72 +267,3 @@ public class SelectController {
         return cartRef;
     }
 }
-//    @RequestMapping("/totalPriceByReferenceId/{referenceid}")
-//    public Double totalPriceByReferenceId(@PathVariable String referenceid) {
-//        List<CartDTO> cartDTO = cartService.findAll();
-//        System.out.println(" CartDTO :" + cartDTO);
-//        System.out.println("reference" + referenceid);
-//        double sum = 0;
-//        for (int i = 0; i < cartDTO.size(); i++) {
-//            if (cartDTO.get(i).getReferenceId().equals(referenceid)) {
-//                int quan = cartDTO.get(i).getQuantity();
-//                double price = Double.parseDouble(cartDTO.get(i).getPrice());
-//                sum += quan * price;
-//            }
-//        }
-//        return sum;
-//    }
-//    @RequestMapping(value = "/delRefProd/{referenceid}", method = RequestMethod.DELETE)
-//    public ResponseEntity<String> deleteByReferenceIdAndProductName(@PathVariable String referenceid, @RequestBody String productName) {
-//        List<CartDTO> cartDTO = cartService.findAll();
-//        System.out.println("CartDTO :" + cartDTO);
-//        System.out.println("productName" + productName);
-//        int flag = 0;
-//        for (int i = 0; i < cartDTO.size(); i++) {
-//            if ((cartDTO.get(i).getProductName().equals(productName)) && (cartDTO.get(i).getReferenceId().equals(referenceid))) {
-//                cartService.deleteByReferenceIdAndProductName(referenceid, productName);
-//                flag = 1;
-//            }
-//
-//        }
-//
-//        if (flag == 1) {
-//            return ResponseEntity.ok("Items with given reference id & productName is present and successfully deleted from the cart!!!");
-//        } else {
-//            return ResponseEntity.ok("Items with given reference id & productName is not present in cart!!");
-//        }
-//    }
-//    @RequestMapping(value = "/delbyref/{referenceid}", method = RequestMethod.DELETE)
-//    public ResponseEntity<String> deleteByReferenceId(@PathVariable String referenceid) {
-//        List<CartDTO> cartDTO = cartService.findAll();
-//        List<Map<String, String>> cartRef = new ArrayList<>();
-//        System.out.println(" CartDTO :" + cartDTO);
-//        System.out.println("reference" + referenceid);
-//
-//        for (int i = 0; i < cartDTO.size(); i++) {
-//            if (cartDTO.get(i).getReferenceId().equals(referenceid)) {
-//                cartService.deleteByReferenceId(referenceid);
-//            }
-//        }
-//        System.out.println("deleted");
-//        return ResponseEntity.ok("Items with given reference id is successfully deleted from the cart!!!");
-//    }
-//    @RequestMapping("/showCartByReferenceId/{referenceid}")
-//    public List<Map<String, String>> showCartByRefrenceId(@PathVariable String referenceid) {
-//        List<CartDTO> cartDTO = cartService.findAll();
-//        List<Map<String, String>> cartRef = new ArrayList<>();
-//        System.out.println(" CartDTO :" + cartDTO);
-//        System.out.println("reference" + referenceid);
-//
-//        for (int i = 0; i < cartDTO.size(); i++) {
-//            Map<String, String> map = new HashMap<>();
-//            if (cartDTO.get(i).getReferenceId().equals(referenceid)) {
-//                map.put("ProductName", cartDTO.get(i).getProductName());
-//                map.put("Price", cartDTO.get(i).getPrice());
-//                map.put("Quant", cartDTO.get(i).getQuantity().toString());
-//                cartRef.add(map);
-//            }
-//        }
-//        System.out.println(cartRef);
-//        return cartRef;
-//    }

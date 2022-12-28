@@ -47,15 +47,16 @@ public class KafkaConsumer2 {
 
         List<ProductDTO> productDTO = productService.findAll();
 
-        for (int i = 0; i < productDTO.size(); i++) {
+        int flag = 0;
+        for (ProductDTO dto : productDTO) {
             Map<String, String> map = new HashMap<>();
-            if (productDTO.get(i).getTitle().equals(resultProduct) && (productDTO.get(i).getStore().getId() == 1002)) {
-                System.out.println(
-                    "The item requested by BAP : " +
-                    resultProduct +
-                    " is present here in BPP 2. Sending the Items back to the BAP in catalog."
-                );
-                map.put("ProductName", productDTO.get(i).getTitle());
+            if (dto.getTitle().equals(resultProduct) && (dto.getStore().getId() == 1002)) {
+                //                System.out.println(
+                //                    "The item requested by BAP : " +
+                //                        resultProduct +
+                //                        " is present here in BPP 2. Sending the Items back to the BAP in catalog."
+                //                );
+                map.put("ProductName", dto.getTitle());
 
                 Item itm = new Item("1002", "Consumer 2 Replied :" + resultProduct);
 
@@ -67,9 +68,13 @@ public class KafkaConsumer2 {
                 Map<String, Object> productMap = obj1.convertValue(catalog, Map.class);
                 System.out.println("obj :" + productMap);
                 kafkaTemplate.send(TOPIC, productMap);
-            } else {
-                // System.out.println("The item requested by BAP :" + resultProduct + " is not present here in BPP 1");
             }
+        }
+
+        if (flag == 0) {
+            System.out.println(
+                "The item requested by BAP :" + name + "is not present here in BPP 2. Sending the Items back to the BAP in catalog."
+            );
         }
     }
 }
